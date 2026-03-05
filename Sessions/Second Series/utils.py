@@ -64,6 +64,6 @@ def clean_903_table(df: pd.DataFrame, collection_end: pd.Timestamp) -> pd.DataFr
             lambda dob: relativedelta(dt1=collection_end, dt2=dob).normalized().years  #dt1 is end date of collection. normalized takes it at midnight
         )
     #  add age buckets column
-    #clean_df["AGE_BUCKETS"] = clean_df['AGE'].apply(calculate_age_buckets)
+        clean_df['AGE_BUCKETS'] = clean_df['AGE'].apply(calculate_age_buckets)
 
     return clean_df
