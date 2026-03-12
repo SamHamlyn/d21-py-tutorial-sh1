@@ -1,6 +1,7 @@
 import pandas as pd
-from config_903 import DateCols, EthnicSubcatgories
+from config_903 import DateCols, EthnicSubcategories
 from dateutil.relativedelta import relativedelta
+import numpy as np
 
 def format_dates(column): 
     ''' 
@@ -52,12 +53,12 @@ def clean_903_table(df: pd.DataFrame, collection_end: pd.Timestamp) -> pd.DataFr
             
     #  Make ethnic main group column. rather than maping with a dictionary we are using enums as it it more efficient
 
-    if "Ethnic" in clean_df.columns:
+    if "ETHNIC" in clean_df.columns:
 
         clean_df['ETHNICITY'] = clean_df['ETHNIC'].apply(   #using a lambda function
-            lambda ethnicity: EthnicSubcatgories[ethnicity].value
+            lambda x: EthnicSubcategories[x].value
         ) 
-    
+
     #  make age column
     if "DOB_dt" in clean_df.columns:
         clean_df['AGE'] = clean_df['DOB_dt'].apply(
@@ -67,3 +68,55 @@ def clean_903_table(df: pd.DataFrame, collection_end: pd.Timestamp) -> pd.DataFr
         clean_df['AGE_BUCKETS'] = clean_df['AGE'].apply(calculate_age_buckets)
 
     return clean_df
+
+
+# def group_calculation(df, column, measure_name):
+#     '''
+#     A function to group a df by input column with the outputs with count,
+#     and percentage to a dataframe with renamed columns.
+#     '''
+#     grouped = df.groupby(column).size() # before function specified table as dfs['header']
+#     #grouped = grouped.to_frame('Count') # makes it a multi idnex chart / makes count  aheader name 
+#     grouped = grouped.to_frame(f'{measure_name} - Count').reset_index() # then makes it like an actual table, 
+#     grouped = grouped.rename(columns = {column: 'value'}) # renaming column to make it lower case
+#     #could have used things like .capitalise() or .lower() or .upper()
+
+#     grouped[f'{measure_name} - Percentage'] = (grouped[f'{measure_name} - Count'] / 
+#                                                     grouped[f'{measure_name} - Count'].sum()) * 100 
+
+    
+#     #print(grouped)
+#     #print(grouped[f'{measure_name} - Percentage'].sum())
+#     return grouped
+
+def group_calculation(df, column, measure_name):
+    '''
+    A function to group as df by input column, outputs with count
+    and percentage to a dataframe with renamed columns.
+    '''
+    grouped = df.groupby(column).size()
+    grouped = grouped.to_frame(f'{measure_name} - Count').reset_index()
+    grouped = grouped.rename(columns={column:'Value'})
+
+    grouped[f'{measure_name} - Percentage'] = (grouped[f'{measure_name} - Count'] / 
+                                                    grouped[f'{measure_name} - Count'].sum()) * 100
+    
+    return grouped
+
+def time_difference(start_col, end_col, business_days=False):
+    ''' 
+    Takes 2 date columns and returns difference in time. 
+    can also be used to find differnece in buisness days. if say buisness_days=true
+    '''
+
+    if business_days: 
+        #np.busday count can only use datetime64[D] type data
+        #so must convert the objects
+        time_diff = np.busday_count(
+            start_col.values.astype("datetime64[D]"),
+            end_col.values.astype("datetime64[D]")
+        )
+    else:
+        time_diff = end_col - start_col
+        time_diff = time_diff / pd.Timedelta(days=1)
+    return time_diff.astype('int')

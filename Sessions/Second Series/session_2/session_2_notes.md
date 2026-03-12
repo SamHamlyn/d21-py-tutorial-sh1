@@ -14,3 +14,7 @@ each function should do one thing. Make up a larger function of smaller function
 
  enums store info liek key value pairs
  for  a function to use another written function. the called functiuon must vbe above
+
+# Session 3
+
+recommended black as a module to hekp with formating 

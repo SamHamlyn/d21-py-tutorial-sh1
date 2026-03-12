@@ -17,7 +17,7 @@ class DateCols(Enum):
         "DUC",
     ]
 
-class EthnicSubcatgories(Enum):
+class EthnicSubcategories(Enum):
     WBRI = "White"
     WIRI = "White"
     WIRT = "White"
