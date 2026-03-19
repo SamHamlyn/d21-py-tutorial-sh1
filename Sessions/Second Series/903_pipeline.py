@@ -7,7 +7,7 @@ from sqlalchemy import (
     MetaData,
     Table,
 )
-from utils import clean_903_table, group_calculation, time_difference
+from utils import clean_903_table, group_calculation, time_difference, multiples_same_event, group_calculation_year, appears_on_both, percent_of_col_with_value
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
@@ -68,7 +68,25 @@ dfs['missing']['MISSING_DURATION_old'] = dfs['missing'].apply(
     lambda x:relativedelta(x['MIS_END_dt'], x['MIS_START_dt']).normalized().days, axis = 1 
 )
 
-dfs['missing']['MISSING_DURATION'] = time_difference(dfs['missing']['MIS_START_dt'],dfs['missing']['MIS_END_dt'] )
+dfs['missing']['MISSING_DURATION'] = time_difference(
+    dfs['missing']['MIS_START_dt'],dfs['missing']['MIS_END_dt'] 
+    )
 
-print(dfs['missing'])
+#print(dfs['missing'])
 
+# output = multiples_same_event(dfs['episodes'], col_name='Number of Episodes')
+ 
+# print(output)
+
+dfs['episodes']['DECOM_YEAR'] = dfs['episodes']['DECOM_dt'].dt.year
+
+measures['Episodes starting per year'] = group_calculation(dfs['episodes'], "DECOM_YEAR", "Measures starting per year")
+
+#print(measures['Episodes starting per year'])
+
+
+measures["Placements by year"] = group_calculation_year(dfs['episodes'], 'DECOM_YEAR', 'PLACE', 'COUNT')
+
+output = appears_on_both(dfs['episodes'], dfs['missing'], "CYP with episodes who have been missing")
+
+print(output)
