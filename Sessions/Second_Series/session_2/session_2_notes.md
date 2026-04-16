@@ -20,7 +20,7 @@ each function should do one thing. Make up a larger function of smaller function
 recommended black as a module to hekp with formating 
 
 
-#second to last session
+# second to last session
 writing tests. very important when writing python. 
 in lots of services with tools like excel and python tends to be tested with users then fixed, but python has tools to make tests 
 all possible inputs.
@@ -32,3 +32,13 @@ entere pytest into the terminal and run it, will check all files for functons st
 if it fails it will say which file and line failed a test. 
 
 in ini pythonpath = ..  the two dots say go up two directroies
+
+
+final session. using sf nova which uses piodide to have things like visuals that run in the browser, translates it to web assesmbly
+
+the app is all in 1 file rather than multiple. This is a requirement of streamlit. 
+
+https://docs.streamlit.io/develop/api-reference
+
+can speed up pidode with decoraters which is where you can say for a function it will save a value the first time it runs it then not run it the next time. It saves it to the browsers local memoert The danger is if it is run multiple tiems. will keep giving the first answer
+

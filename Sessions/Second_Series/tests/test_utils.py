@@ -8,7 +8,7 @@
 # #just can't get it to run with the imports, working for him though
 
 
-# def test_format_dates(): 
+# def test_format_dates():
 #     dates_df = pd.DataFrame(
 #             {
 #                 "DMY": ["01/01/2025", pd.NA],
@@ -44,9 +44,11 @@ def test_format_dates():
 
     dmy_test_date = pd.Series([pd.to_datetime("01/01/2025", format="%d/%m/%Y"), pd.NaT])
 
-    dmy_col = format_dates(dates_df['DMY'])
+    dmy_col = format_dates(dates_df["DMY"])
 
-    pd.testing.assert_series_equal(dmy_col, dmy_test_date, check_names=False, check_dtype=False)
+    pd.testing.assert_series_equal(
+        dmy_col, dmy_test_date, check_names=False, check_dtype=False
+    )
 
     with pytest.raises(Exception):
         format_dates(dates_df["YMD"])
@@ -55,15 +57,18 @@ def test_format_dates():
         format_dates(dates_df["Error Col"])
 
     nat_col = format_dates(dates_df["NaT"])
-    pd.testing.assert_series_equal(nat_col, pd.Series([pd.NaT, pd.NaT]), check_names=False)
+    pd.testing.assert_series_equal(
+        nat_col, pd.Series([pd.NaT, pd.NaT]), check_names=False
+    )
 
 
-#stil lcan't get pytest to work
+# stil lcan't get pytest to work
 
-def test_clean_903_table(dummy_header):   
+
+def test_clean_903_table(dummy_header):
     collection_end = datetime(2025, 3, 31)
 
-    output = clean_903_table(dummy_header, collection_end) 
+    output = clean_903_table(dummy_header, collection_end)
 
     correct_ethnicity = ["White", "Mixed", "Not Obtained", "Mixed"]
     correct_age = [31, 28, 2, 0]
@@ -77,10 +82,10 @@ def test_clean_903_table(dummy_header):
 
     expected_df = pd.DataFrame(
         {
-            "ETHNICITY":correct_ethnicity,
-            "AGE":correct_age,
-            "AGE_BUCKETS":correct_age_buckets,
-            "MC_DOB_dt":correct_mc_dob_dt
+            "ETHNICITY": correct_ethnicity,
+            "AGE": correct_age,
+            "AGE_BUCKETS": correct_age_buckets,
+            "MC_DOB_dt": correct_mc_dob_dt,
         }
     )
 
